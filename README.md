@@ -10,7 +10,7 @@ Committees to ensure that data ingestion activities are aligned with the goals o
 
 
 ### Data Ingest Coordination Working Group Members
-See: [Data Ingest Coordination Working Group Voting Members](Voting-Members.md)
+See: [Data Ingest Coordination Working Group Voting Members](WG-Members)
 
 Winter Relay 2025:
 
