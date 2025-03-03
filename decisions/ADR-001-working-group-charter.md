@@ -2,15 +2,12 @@
 status: → proposed 
 date: → 2025-03-03
 deciders: → Data Ingest WG Voting Members
-consulted: → list everyone whose opinions are sought (typically, committees and other WGs); and with whom there is two-way communication
-informed: → list everyone who is kept up-to-date on progress; and with whom there is one-way communication
+consulted: → Planning Committee 
+informed: → Standards Committee
 ---
-# Title of the Decision
+# Charter of the Data Ingest Coordination Working Group
 
-## Context and Problem Statement
-
-Describe the context and problem statement, e.g., in free form using two to three sentences or in the form of an illustrative story.
-You may want to articulate the problem in form of a question and add links to collaboration boards or issue management systems.
+## Context
 
 ## Decision Drivers
 
