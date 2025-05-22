@@ -1,0 +1,273 @@
+# Two proposals for the ingest-metadata KGX+ file - a yaml file that complements the nodes and edges jsonlines files.
+# The first is a minimal version that includes only the high priority metadata using a simple, flat model - as a target for initial Reference Ingests. 
+# The second is a more structured, expressive model that defines general, re-usable data structures based on Biolink classes and modeling patterns/principles. This represents a longer term goal. 
+# These proposals were informed by discussions on DINGO calls, and requirements described in the following documents:
+    # https://docs.google.com/document/d/1cEDVPt2CejRDlFY7fMlZMBSly1be23XyH-FXSArDHaU/edit?tab=t.0
+    # https://docs.google.com/presentation/d/12o4NFoLJO44wmL9bnvs2KB9z7JwN_tU6AqC66jgchgw/edit?slide=id.g35573e59b37_0_5#slide=id.g35573e59b37_0_5
+    # https://docs.google.com/document/d/1_KbBahN8mArFvIfVqdhyzmEAGR4EXaHuK0HRbcVl4FA/edit?tab=t.0
+
+# ----------------------------------------------------------------------------------------------- #
+
+# PROPSOAL 1:  Minimal/flat Strawperson model. Slots included and theri names open for discussion. 
+
+# Info about this metadata file
+ "id":                          # identifier for this metadata file (may not need this)
+ "type":                        # biolink:IngestMetadata (subclassOf InformationContentEntity)
+ "name":                        # a name for this metadata file, e.g. "ctd_chem_disease_ingest_meta",
+ "created_by":                  # who created this ingest metadata file
+ "creation_date":               # when it was created
+
+# Metadata about the ingest task/process/code
+ "ingest_team":                 # for us, this is the KP that performed the ingest, e.g. "infores:molepro"
+ "ingest_contributors":         # list of developers/curators/modelers who contributed to creating the inges
+ "ingest_contact_person":       # name of the point of contact about this ingest
+ "ingest_contact_email":        # email address to use to contact this person
+ "ingest_code_url":             # url of link to code on Github (a specific release? or commit?)
+ "ingest_description":          # free-text description of how and why data from a source was ingested. Any important details about the ingest/transform. Etc. 
+ 
+# Metadata about the ingest source(s)
+ "source_name":                 # human redable name of the source
+ "source_id":                   # infores identifier of the source
+ "source_data_version":         # version of the data from the source
+ "source_publication_date":     # date that the ingested data was actually published by the source (may or may not be reflected in the source_data_version)
+ "source_download_date":        # date that data from the resource was downloaded into the target system
+ "source_license":              # license / terms of use for the ingested source
+ "source_data_location":        # list of urls where source data was accessed / downloaded / queried
+ "source_files":                # list of file names from which content was ingested
+ "source_api_endpoints":        # list of API endpoint names/descriptions used to query/ingest source data
+ 
+# Metadata about the final biolink-ified dataset/graph produced by the ingest. 
+ "target_name":                 # human redable name of the target data/graph produced by this ingest 
+ "target_id":                   # identifier of the target data/graph
+ "target_data_version":         # version of the ingested data from the source
+ "target_license":              # license / terms of use for the target data/graph
+ "target_creation_date":        # date that the target data/graph was created 
+ "target_data_location":        # list of urls where target data was accessed / downloaded (should include page for it in our KG Registry/Hub, that give mroe info not provided in this metadata file)
+ "target_data_model":           # the data model used to structure the data, e.g. "infores:biolink-model"
+ "target_data_model_version":   # the version of this data model, e.g. "4.2.6-rc5"
+ "target_data_format":          # the format in which the data/graph is serialized. e.g. here, "KGX" is a higher order format, which specifies structure to a json-lines serialization.
+
+
+# ----------------------------------------------------------------------------------------------- #
+
+# PROPSOAL 2:  Structured, expressive, flexible model - a longer term target that may serve as a broader Biolink-based standard.
+# Proposes several classes including IngestMetadata, SourceIngest, Document, File, APIResult, DatabaseDump, DataSet, DataSetDistribution, MetaKnowlegeGraph, BiolinkTransformMetadata, and PropertyDerivation 
+
+{
+
+# Info about this metadata file (follows an 'IngestMetadata' schema)
+
+ "id":                          # identifier for this metadata file (may not need this)
+ "type":                        # biolink:IngestMetadata (subclassOf InformationContentEntity)
+ "name":                        # a name for this metadata file, e.g. "ctd_chem_disease_ingest_meta",
+ "created_by":                  # who created this ingest metadata file
+ "creation_date":               # when it was created
+
+
+# Metadata about the ingest process and code
+
+ "ingest_team":                 # for us, this is the KP that performed the ingest, e.g. "infores:molepro" (could be their name, infores, or an Organization instance/object
+ "ingest_contributors":         # list of developers/curators/modelers who contributed to creating the inges (free text names, person IDs (e.g ORCIDs), or Person objects
+ "ingest_contact_person":       # name of the point of contact about this ingest  (free text, or Person object)
+ "ingest_contact_email":        # email address to use to contact this person
+ "ingest_code_url":             # url of link to code on Github
+ "ingest_use_case_description": # free-text description of why data from a source was ingested, e.g. "Chemical-Disease Edges ingested to support . . . "
+ 
+
+# Metadata about the ingested source(s)
+
+ "ingest_sources": [            # one or more IngestSource objects, describing the information resources, the data they provided, and how the data was retrieved. An array b/c some ingests use 'primary' and 'secondary' sources
+   {
+     "type":                    # biolink:SourceIngest
+     
+     "resource": {              # the Information Resource directly accessed to perform the ingest
+       "type":                  # "biolink:InformationResource" - we cold build on the initial InfoRes schema described here: https://biolink.github.io/information-resource-registry/
+       "id":                    # infores of the resource e.g. "infores:ctd"
+       "publications":          # publications that my be helpful for understanding the source data ingested (list of ids, or biolink:Publication objects?)
+       "documentation_urls":    # webpages that provide general info about the source, or describes downloads/services provided for accessing data (consdier if we want separate properties for these two categories of documentation, e.g. "general_documentation_urls", and "access_documentation_urls")
+       "license": {             # a "Document" object that represents/describes the license that reports terms of use this resource 
+         "id":                  # identifier for the License document (if it has one)
+         "type":                # "biolink:Document"
+         "name":                # name of a public license, if one was used (e.g. cc-by)
+         "url":                 # url of a publically accessible docuemnt representing the license or terms of use
+         "description":         # free text description of terms of use
+         }
+     },
+
+     "ingest_role":             # indicates if this is the 'primary' source, or a 'secondary' source contributing to this ingest  (some ingests rely on data from secondary sources to support the primary source  - e.g. DrugApprovalsKP uses FAERS as a secondary source to inform which/how edges are created).
+     "retrieval_date":          # date that data from the resource was retrieved and pulled into the target system (e.g. a file downloaded, a database dump generated, API queries run)
+     "data_version":            # version of the source data ingested, as assigned by the source (we can capture  this here if the same version applies across all content retrieved)
+     
+    # Descriptions of the specific data artifacts retrieved. Below we define separate slots to capture info about the there primary types of mechanisms for retrieving data ('Files', 'API Endpoints', or 'Database Dumps') - but other approaches possible here.*
+     "retrieved_files": [         # list of File objects, describing a file and when/how it was accessed
+       {
+         "type":                 # "biolink:File"
+         "name":                 # name given to the file by the source, e.g. "CTD_chemicals_diseases.tsv.gz"
+         "urls":                 # specific url for viewing/downloading the file
+         "data_format":          # e.g. "tsv"
+         "data_version":         # version of the specific file (if specific to this file, and not the larger ingested resource)
+         "records":              # number of records in the source file (e.g. rows for a tsv file)
+         "size":                 # e.g. "465 MB"
+         # . . .                 # additional properties here? 
+       }
+     ],
+     "retrieved_api_results": [  # list of API Result objects
+       {
+         "type":                 # "biolink:APIResult"
+         "endpoint_name":        # name of a endpoint queried to return ingested data
+         "endpoint_url":         # url of a endpoint queried to return ingested data
+         "endpoint_version":     # version of the api queried
+         "data_format":          # e.g. "json"
+         "data_version":         # version of the specific file (if specific to this file, and not the larger ingested resource)
+         "query_parameters":     # the query parameters used in the query
+         # . . .                 # additional useful properties here? 
+       }
+     ],
+     "retrieved_database_dump": [   # list of DatabaseDump objects
+       {
+         "type":                    # "biolink:DatabaseDump"
+         "database_name":           # name of a database queried to return ingested data (if relevant/distinct form the name of the overall resource)
+         "access_url":              # url where database accessed
+         "data_format":             # e.g. "json"
+         "data_version":            # version of the specific file (if specific to this file, and not the larger ingested resource)
+         "query_parameters":        # the query parameters used in the query to generate the dump
+         # . . .                    # additional useful properties here? 
+       }       
+     ],   
+   },
+ ]
+
+# Metadata about the final biolink-ified dataset produced by the ingest. 
+# Uses a 'Dataset' object to capture the info below, as the value of a single "targetDataset" property.
+# A dataset may be a single file or a collection of many files whose data is consisdered part of the same data set (e.g. nodes and edges and ingest-metadata files in KGX+)
+
+ "target_dataset": {
+   "id":                 # a unique identifier for the graph/dataset produced by this ingest (this could be an infores, if we allow minting infores ids at level of each ingest, rather than a complete resource)
+   "type":               # "biolink:DataSet"  (represents an HCLS "version" level artifact - see https://www.w3.org/TR/hcls-dataset/)
+   "name":               # human readable name for the dataset/graph created by the ingest
+   "version":            # version of the dataset (using conventions defined by creator)
+   "description":        # free-text description of the dataset/graph (its contents, purpose, etc)
+   "creation_date":      # data that this version of the dataset was created 
+   "access_location":    # a url or file path where the content of this dataset version can be accessed
+   "homepage":           # a url where more info about the dataset version and its contents, purpose, etc. can be found
+   "license":            # use same model here as for the source license info captured above.
+   "data_model":         # the data model used to structure the data, e.g. "infores:biolink-model"
+   "data_model_version": # the version of this data model, e.g. "4.2.6-rc5"
+   "format":             # a format for the dataset as a whole (may be differnet than the format used for each file).  e.g. here, "KGX" is a higher order format/standard than the concrete serialization formats of each file below
+   "distributions": [    # A list of 'DataSetDistribution' objects, representing represents an HCLS 'distribution' level artifacts. Groups proeprties of the DataSet that hold at the 'distribution' level.
+     {
+      "type":            # "biolnk:DataSetDistribution" (represents an HCLS "distribution" level artifact - see https://www.w3.org/TR/hcls-dataset/)
+      "name":            # descriptive, human-readable name for the distribution
+      "files":           # list of files that are part of this DataSet version, e.g. ["ctd_chem_disease_nodes.jsonl", "ctd_chem_disease_edges.jsonl", "ctd_chem_disease_ingest_meta.yaml"]  
+      "access_urls":     # pages wehre files can be accessed
+      "endpoints":       # list of endpoints/services through which data from this distribution can be accessed programmatically
+      "formats":         # formats used for data in this distribution (e.g. "jsonl, yaml")
+      }	
+    ],
+
+   # Alternatively, we could use a more expressive structure that allows description of each file in a Disctribution:
+   "files": [            # a list of files in the target dataset, represented as 'File' objects, which may include descriptive info unique to each file and its contents - but this info might be provided / providable in the MetaKnowledgeGraph structure further below. Note also that this info could instead go in the header of the files themselves. 
+     {
+       "type":           # "biolink:File"
+       "name":           # e.g. "ctd_chem_disease_nodes.jsonl",
+       "format":         # e.g. "json-lines",
+       "records":        # number of records (nodes) in the file
+       "size":           # e.g. "655 MB"
+       "urls":           # specific url for viewing/downloading the file
+       # . . .           # additional useful properties here? 
+     },
+     {
+       "type":           # "biolink:File"
+       "name":           # e.g. "ctd_chem_disease_edges.jsonl",
+       "format":         # e.g. "json-lines",
+       "records":        # number of records (edges) in the file
+       "size":           # e.g. "1035 MB"
+       "urls":           # specific url for viewing/downloading the file
+       # . . .           # additional useful properties here? 
+     },
+     {
+       "type":           # "biolink:File"
+       "name":           # e.g. "ctd_chem_disease_ingest_meta.jsonl",
+       "format":         # e.g. "yaml",
+       "records":        # number of records in the file  (there will only be one ingest record per ingest metadata file)
+       "size":           # e.g. "5 MB"
+       "urls":           # specific url for viewing/downloading the file
+       # . . .             # additional useful properties here? 
+   },
+ ],
+ 
+ 
+ # Metadata about the types of nodes, edges and attributes in the target dataset/graph. 
+ "target_metakg": [
+   {
+     # Leverage/refine the TRAPI MetaKnowledgeGraph schema here. Consider enhancing the schema to capture all known knowledge sources for each MetaEdge in a MetaKG  - e.g. 'primary', 'aggregator' (if ingested from an external aggregator like Pharos), 'supporting_data' (for KPs that create de novo knowledge by interpreting/analyzing more foundational data). Would just require addition of one property def to the MetaEdge schema ("sources": { "type": "array", "items": $ref: "#/components/schemas/RetrievalSource" } )
+   },
+
+
+# Metadata about the source-to-target derivation.
+# Note that these 'derivations' are not meant to be complete declarative mappings or transform specifications. They are meant only to provide an idea of what fields in a source dataset/file provided information used to populate what edge properties in the Biolink-compliant representation - so that a developer can get a sense of where to look to evaluate ingest accuracy/quality, debug, or re-engineer/refactor the ingest, etc. 
+
+ "transform_metadata": 
+   {
+   "type": "biolink:BiolinkTransformMetadata"
+   "spoq_property_derivations": [
+     {
+       "type": "biolink:PropertyDerivation"
+       "source_properties": ["CTD_chemicals_diseases.tsv.gz:ChemicalID"],   # field name or path to element holding the data used to create the biolink.subject value. Prefix with name of source file to disambiguate if needed. Multivalued as some biolink properties hold content derived form >1 source field. 
+       "target_property": "biolink:subject",
+       "comments":               # any relevant/useful info the developer wants to provide about this derivation (e.g pre-processing/filtering steps or logic)
+     },	
+     {
+       "type": "biolink:PropertyDerivation"
+       "source_properties": ["CTD_chemicals_diseases.tsv.gzDiseaseID"],
+       "target_property": "biolink:object",
+       "comments": 
+     },
+     {
+       "type": "biolink:PropertyDerivation"
+       "source_properties": ["CTD_chemicals_diseases.tsv.gzDirectEvidence"],
+       "target_property": "biolink:predicate",
+       "comments": 
+     } 
+   ],
+
+   "edge_property_derivations": [
+     {
+       "type": "biolink:PropertyDerivation"
+       "source_properties": ["CTD_chemicals_diseases.tsv.gz:PubMedIDs"],
+       "target_property": "biolink:publications",
+       "comments": 
+     },	
+     {
+       "type": "biolink:PropertyDerivation"
+       "source_properties": ["CTD_chemicals_diseases.tsv.gz:InferenceScore"],
+       "target_property": "biolink:score",
+       "comments": 	 
+     }
+   ],
+ 
+
+# Metadata about the intermediate pre-normalized/biolink-ified dataset produced by a direct, unopinionated parsing of the source data described above. 
+# Uses a 'Dataset' object to capture the info below, as the value of a single "intermediateDataset" property.
+
+ "intermediate_dataset":  {
+   # Same data model as used for describing the final target dataset above
+ },
+
+
+
+
+
+
+
+
+
+
+# ---------------------------------------------------------------------------------------------------- #
+
+
+# Footnotes:
+
+# *   Alt, we could have a single "ingested_data_artifacts" slot that takes a File, API Endpoint, or Database object). Or an "ingested_dataset" slot that takes a DataSet representing just what we ingested, 
+# and which can be comprised of one or more files. Note that I don't suggest creating a DataSet object for the source data (as I did for the target KGX output), as here we are interested in
+# some ad hoc set of files or API query results, which may not be an actual 'dataset' provided by the source. I don't see value in creating a DataSet object in this case. 
