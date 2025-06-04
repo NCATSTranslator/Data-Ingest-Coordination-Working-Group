@@ -48,6 +48,11 @@
  "target_data_format":          # the format in which the data/graph is serialized. e.g. here, "KGX" is a higher order format, which specifies structure to a json-lines serialization.
 
 
+# Other important info to include in the minimal version of this model / file?
+  # a lsit of edge predicates / node categories included in the ingest?
+  # a list of edge types (metaedges) represented in the ingest (reported as Scat - predicate - Ocat triples) . . . possible also with KL/AT for each?
+  # . . . 
+
 # ----------------------------------------------------------------------------------------------- #
 
 # PROPSOAL 2:  Structured, expressive, flexible model - a longer term target that may serve as a broader Biolink-based standard.
