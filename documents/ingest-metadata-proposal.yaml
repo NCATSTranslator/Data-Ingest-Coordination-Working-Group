@@ -1,4 +1,4 @@
-# Two proposals for the ingest-metadata KGX+ file - a yaml file that complements the nodes and edges jsonlines files.
+# Two proposals for the ingest-metadata KGX file - a yaml file that complements the nodes and edges jsonlines files.
 # The first is a minimal version that includes only the high priority metadata using a simple, flat model - as a target for initial Reference Ingests. 
 # The second is a more structured, expressive model that defines general, re-usable data structures based on Biolink classes and modeling patterns/principles. This represents a longer term goal. 
 # These proposals were informed by discussions on DINGO calls, and requirements described in the following documents:
@@ -28,13 +28,15 @@
 # Metadata about the ingest source(s)
  "source_name":                 # human redable name of the source
  "source_id":                   # infores identifier of the source
+ "source_license":              # license / terms of use for the ingested source
  "source_data_version":         # version of the data from the source
  "source_publication_date":     # date that the ingested data was actually published by the source (may or may not be reflected in the source_data_version)
  "source_download_date":        # date that data from the resource was downloaded into the target system
- "source_license":              # license / terms of use for the ingested source
- "source_data_location":        # list of urls where source data was accessed / downloaded / queried
- "source_files":                # list of file names from which content was ingested
- "source_api_endpoints":        # list of API endpoint names/descriptions used to query/ingest source data
+ "source_access_urls":          # list of urls where source data was accessed / downloaded / queried
+ "source_data_type":            # format/type of files or payloads that were downloaded/retrieved
+ "source_data_files":           # list of file names from which content was ingested
+ "source_data_endpoints":       # list of API endpoint names/descriptions used to query/ingest source data
+ "source_database":             # name/description of a database that was accessed/instantiated to retrieve source data
  
 # Metadata about the final biolink-ified dataset/graph produced by the ingest. 
  "target_name":                 # human redable name of the target data/graph produced by this ingest 
@@ -43,14 +45,23 @@
  "target_license":              # license / terms of use for the target data/graph
  "target_creation_date":        # date that the target data/graph was created 
  "target_data_location":        # list of urls where target data was accessed / downloaded (should include page for it in our KG Registry/Hub, that give mroe info not provided in this metadata file)
+ "target_data_format":          # the format in which the data/graph is serialized. e.g. here, "KGX" is a higher order format, which specifies structure to a json-lines serialization.
  "target_data_model":           # the data model used to structure the data, e.g. "infores:biolink-model"
  "target_data_model_version":   # the version of this data model, e.g. "4.2.6-rc5"
- "target_data_format":          # the format in which the data/graph is serialized. e.g. here, "KGX" is a higher order format, which specifies structure to a json-lines serialization.
+
+
+# Descriptive metadata about the content of the target (could be used for validation) - perhaps only for the final KGX+ artifact, not intermediate KGX- artifacts?
+  "total_edge_count":           # Count of total number of edges in the graph
+  "total_node_count":           # Count of total number of nodes in the graph
+  "orphan_node_count":          # Count of nodes that do not participate inan edge 
+  "node_categories:             # A list of biolink node categories used in the graph
+  "edge_predicates":            # A list of biolink predicates used in the graph
 
 
 # Other important info to include in the minimal version of this model / file?
-  # a lsit of edge predicates / node categories included in the ingest?
+  # validation metadata (how many edges failed normalization, or failed validation?)
   # a list of edge types (metaedges) represented in the ingest (reported as Scat - predicate - Ocat triples) . . . possible also with KL/AT for each?
+  #  transform metadata (how data was transformed from source to target) - IMO this should be captured with / derived from code that executed the transformation, and documented/hosted elsewhere
   # . . . 
 
 # ----------------------------------------------------------------------------------------------- #
@@ -81,7 +92,7 @@
 
 # Metadata about the ingested source(s)
 
- "ingest_sources": [            # one or more IngestSource objects, describing the information resources, the data they provided, and how the data was retrieved. An array b/c some ingests use 'primary' and 'secondary' sources
+ "ingest_sources": [            # one or more SourceIngest objects, describing the information resources, the data they provided, and how the data was retrieved. An array b/c some ingests use 'primary' and 'secondary' sources
    {
      "type":                    # biolink:SourceIngest
      
@@ -90,7 +101,7 @@
        "id":                    # infores of the resource e.g. "infores:ctd"
        "publications":          # publications that my be helpful for understanding the source data ingested (list of ids, or biolink:Publication objects?)
        "documentation_urls":    # webpages that provide general info about the source, or describes downloads/services provided for accessing data (consdier if we want separate properties for these two categories of documentation, e.g. "general_documentation_urls", and "access_documentation_urls")
-       "license": {             # a "Document" object that represents/describes the license that reports terms of use this resource 
+       "license": {             # a "Document" object that represents/describes the license that reports terms of use this resource.  Note that license may vary for different subsets/files provided by a source - which can be reported on individual files below
          "id":                  # identifier for the License document (if it has one)
          "type":                # "biolink:Document"
          "name":                # name of a public license, if one was used (e.g. cc-by)
@@ -99,9 +110,10 @@
          }
      },
 
-     "ingest_role":             # indicates if this is the 'primary' source, or a 'secondary' source contributing to this ingest  (some ingests rely on data from secondary sources to support the primary source  - e.g. DrugApprovalsKP uses FAERS as a secondary source to inform which/how edges are created).
+     "data_version":            # version of the source data ingested, as assigned by the source (we can capture this here if the same version applies across all content retrieved)
+     "data_publication_date":   # date that the ingested data was actually published by the source (may or may not be reflected in the source_data_version)  "source_data_version":       
      "retrieval_date":          # date that data from the resource was retrieved and pulled into the target system (e.g. a file downloaded, a database dump generated, API queries run)
-     "data_version":            # version of the source data ingested, as assigned by the source (we can capture  this here if the same version applies across all content retrieved)
+     "ingest_role":             # indicates if this is the 'primary' source, or a 'secondary' source contributing to this ingest  (some ingests rely on data from secondary sources to support the primary source  - e.g. DrugApprovalsKP uses FAERS as a secondary source to inform which/how edges are created).
      
     # Descriptions of the specific data artifacts retrieved. Below we define separate slots to capture info about the there primary types of mechanisms for retrieving data ('Files', 'API Endpoints', or 'Database Dumps') - but other approaches possible here.*
      "retrieved_files": [         # list of File objects, describing a file and when/how it was accessed
@@ -164,13 +176,13 @@
       "type":            # "biolnk:DataSetDistribution" (represents an HCLS "distribution" level artifact - see https://www.w3.org/TR/hcls-dataset/)
       "name":            # descriptive, human-readable name for the distribution
       "files":           # list of files that are part of this DataSet version, e.g. ["ctd_chem_disease_nodes.jsonl", "ctd_chem_disease_edges.jsonl", "ctd_chem_disease_ingest_meta.yaml"]  
-      "access_urls":     # pages wehre files can be accessed
+      "access_urls":     # pages where files can be accessed
       "endpoints":       # list of endpoints/services through which data from this distribution can be accessed programmatically
       "formats":         # formats used for data in this distribution (e.g. "jsonl, yaml")
       }	
     ],
 
-   # Alternatively, we could use a more expressive structure that allows description of each file in a Disctribution:
+   # Alternatively, we could use a more expressive structure that allows description of each file in a Disctribution.  Just replace "distributions" property above with:
    "files": [            # a list of files in the target dataset, represented as 'File' objects, which may include descriptive info unique to each file and its contents - but this info might be provided / providable in the MetaKnowledgeGraph structure further below. Note also that this info could instead go in the header of the files themselves. 
      {
        "type":           # "biolink:File"
