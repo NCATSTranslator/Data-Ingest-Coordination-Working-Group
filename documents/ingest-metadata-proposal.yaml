@@ -54,7 +54,7 @@
   "total_edge_count":           # Count of total number of edges in the graph
   "total_node_count":           # Count of total number of nodes in the graph
   "orphan_node_count":          # Count of nodes that do not participate inan edge 
-  "node_categories:             # A list of biolink node categories used in the graph
+  "node_categories":             # A list of biolink node categories used in the graph
   "edge_predicates":            # A list of biolink predicates used in the graph
 
 
