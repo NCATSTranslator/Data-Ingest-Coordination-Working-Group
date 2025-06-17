@@ -31,20 +31,20 @@
  "source_license":              # license / terms of use for the ingested source
  "source_data_version":         # version of the data from the source
  "source_publication_date":     # date that the ingested data was actually published by the source (may or may not be reflected in the source_data_version)
- "source_download_date":        # date that data from the resource was downloaded into the target system
+ "source_download_date":        # date that data from the resource was downloaded into the ingest system
  "source_access_urls":          # list of urls where source data was accessed / downloaded / queried
- "source_data_type":            # format/type of files or payloads that were downloaded/retrieved
- "source_data_files":           # list of file names from which content was ingested
- "source_data_endpoints":       # list of API endpoint names/descriptions used to query/ingest source data
- "source_database":             # name/description of a database that was accessed/instantiated to retrieve source data
+ "source_data_format":          # format/type of files or payloads that were downloaded/retrieved
+ "source_data_files":           # list of file names from which content was ingested (use when source data is in files)
+ "source_data_endpoints":       # list of API endpoint names/descriptions used to query/ingest source data (use when source data is accessedfrom an API)
+ "source_database":             # name/description of a database that was accessed/instantiated to retrieve source data (use when source data is pulled from a database)
  
-# Metadata about the final biolink-ified dataset/graph produced by the ingest. 
+# Metadata about the dataset/graph produced by the ingest (consider what applies to an intermediate KGX- artifact, vs a final KGX+, normalized, Biolink-compliant artifact). 
  "target_name":                 # human redable name of the target data/graph produced by this ingest 
- "target_id":                   # identifier of the target data/graph
+ "target_id":                   # identifier of the target data/graph, as assigned by the ingesting system
  "target_data_version":         # version of the ingested data from the source
- "target_license":              # license / terms of use for the target data/graph
  "target_creation_date":        # date that the target data/graph was created 
- "target_data_location":        # list of urls where target data was accessed / downloaded (should include page for it in our KG Registry/Hub, that give mroe info not provided in this metadata file)
+ "target_license":              # license / terms of use for the target data/graph
+ "target_access_urls":          # list of urls where target data was accessed / downloaded (should include page for it in our KG Registry/Hub, that give mroe info not provided in this metadata file)
  "target_data_format":          # the format in which the data/graph is serialized. e.g. here, "KGX" is a higher order format, which specifies structure to a json-lines serialization.
  "target_data_model":           # the data model used to structure the data, e.g. "infores:biolink-model"
  "target_data_model_version":   # the version of this data model, e.g. "4.2.6-rc5"
