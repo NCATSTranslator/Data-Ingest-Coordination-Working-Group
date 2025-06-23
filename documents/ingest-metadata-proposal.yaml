@@ -9,44 +9,45 @@
 # ----------------------------------------------------------------------------------------------- #
 
 # PROPSOAL 1:  Minimal/flat Strawperson model. Slots included and theri names open for discussion. 
+# Question:  Do we want the model underlying htis format to be Biolink0based/compliant? And the IngestMetadata object to be represented as a node?
 
 # Info about this metadata file
  "id":                          # identifier for this metadata file (may not need this)
- "type":                        # biolink:IngestMetadata (subclassOf InformationContentEntity)
+ "type":                        # biolink:IngestMetadata (subclassOf InformationContentEntity). Should we use a "category" slot here?
  "name":                        # a name for this metadata file, e.g. "ctd_chem_disease_ingest_meta",
  "created_by":                  # who created this ingest metadata file
  "creation_date":               # when it was created
 
 # Metadata about the ingest task/process/code
- "ingest_team":                 # for us, this is the KP that performed the ingest, e.g. "infores:molepro"
+ "ingest_team":                 # for us, this is the KP that performed the ingest, e.g. "infores:molepro".  I think we can eliminate this slot - given the dissolving boundarides between 'teams"
  "ingest_contributors":         # list of developers/curators/modelers who contributed to creating the inges
  "ingest_contact_person":       # name of the point of contact about this ingest
  "ingest_contact_email":        # email address to use to contact this person
  "ingest_code_url":             # url of link to code on Github (a specific release? or commit?)
- "ingest_description":          # free-text description of how and why data from a source was ingested. Any important details about the ingest/transform. Etc. 
+ "ingest_description":          # free-text description of how and why data from a source was ingested. Any important details about the ingest/transform. Etc. Should this be left to a separate RIG file? If so, cature url of the RIG inthis slot? or eliminate slot?
  
 # Metadata about the ingest source(s)
  "source_name":                 # human redable name of the source
  "source_id":                   # infores identifier of the source
- "source_license":              # license / terms of use for the ingested source
- "source_data_version":         # version of the data from the source
- "source_publication_date":     # date that the ingested data was actually published by the source (may or may not be reflected in the source_data_version)
- "source_download_date":        # date that data from the resource was downloaded into the ingest system
- "source_access_urls":          # list of urls where source data was accessed / downloaded / queried
- "source_data_format":          # format/type of files or payloads that were downloaded/retrieved
+ "source_license":              # license / terms of use for the ingested source.  Consider a richer model of licenses (see proposal 2 below)
+ "source_data_version":         # version of the data from the source (use version naming conventions/syntax from source in the value here)
+ "source_publication_date":     # date that the ingested data was actually published by the source (may or may not be reflected in the source_data_version). ISO8601 format.
+ "source_download_date":        # date that data from the resource was downloaded into the ingest system. ISO8601 format.
+ "source_access_urls":          # list of urls where source data was accessed / downloaded / queried. iriOrCURIE.
+ "source_data_format":          # format/type of files or payloads that were downloaded/retrieved.  Free text? Create an enum?
  "source_data_files":           # list of file names from which content was ingested (use when source data is in files)
- "source_data_endpoints":       # list of API endpoint names/descriptions used to query/ingest source data (use when source data is accessedfrom an API)
+ "source_data_endpoints":       # list of API endpoint names/descriptions used to query/ingest source data (use when source data is accessed from an API)
  "source_database":             # name/description of a database that was accessed/instantiated to retrieve source data (use when source data is pulled from a database)
  
 # Metadata about the dataset/graph produced by the ingest (consider what applies to an intermediate KGX- artifact, vs a final KGX+, normalized, Biolink-compliant artifact). 
  "target_name":                 # human redable name of the target data/graph produced by this ingest 
- "target_id":                   # identifier of the target data/graph, as assigned by the ingesting system
- "target_data_version":         # version of the ingested data from the source
+ "target_id":                   # identifier of the target data/graph, as assigned by the ingesting system or ingest catalog (t.b.d. what this is, how these will look)
+ "target_data_version":         # version of the ingested data as produced by the ingesting system. (any recommendations or constraintson how we specify version?)
  "target_creation_date":        # date that the target data/graph was created 
- "target_license":              # license / terms of use for the target data/graph
+ "target_license":              # license / terms of use for the target data/graph. Consider a richer model of licenses (see proposal 2 below)
  "target_access_urls":          # list of urls where target data was accessed / downloaded (should include page for it in our KG Registry/Hub, that give mroe info not provided in this metadata file)
- "target_data_format":          # the format in which the data/graph is serialized. e.g. here, "KGX" is a higher order format, which specifies structure to a json-lines serialization.
- "target_data_model":           # the data model used to structure the data, e.g. "infores:biolink-model"
+ "target_data_format":          # the format in which the data/graph is serialized. e.g. here, "KGX" is a higher order format, which specifies structure to a json-lines serialization?
+ "target_data_model":           # the data model used to structure the data.  Recommendations/constraints on capturing this for Translator . . .  "Biolink Model". "https://w3id.org/biolink/biolink-model"? "w3id:biolink-model")
  "target_data_model_version":   # the version of this data model, e.g. "4.2.6-rc5"
 
 
@@ -54,7 +55,7 @@
   "total_edge_count":           # Count of total number of edges in the graph
   "total_node_count":           # Count of total number of nodes in the graph
   "orphan_node_count":          # Count of nodes that do not participate inan edge 
-  "node_categories":             # A list of biolink node categories used in the graph
+  "node_categories":            # A list of biolink node categories used in the graph
   "edge_predicates":            # A list of biolink predicates used in the graph
 
 
