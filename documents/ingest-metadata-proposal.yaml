@@ -26,12 +26,12 @@
  "ingest_code_url":             # url a specific official release or tagged branch of the code used to generate the target product     |    1..1 iriOrCurie     TO DO: explore hwo this would actually work
  "ingest_guide_url":            # url of the referecne ingest guide (RIG) that provides a free-text description of how and why data from a source was ingested, following defined RIG template/conventions
  
-# Metadata about the ingest source(s)
+# General and ingest-specific info about the ingest source(s)
  "source_infores_id":           # infores identifier of the source                   |   1..1 iriOrCurie
  "source_license":              # license / terms of use for the ingested source.    |   0..1 string      TO DO: Provide additional guidance on how to populate. Consider a more cosntrained or richer model of licenses (see proposal 2 below)
  "source_data_version":         # version of the source data ingested (use version naming conventions/syntax from source in the value here)                     |      1..1 string
  "source_publication_date":     # date that the ingested data was actually published by the source (may or may not be reflected in the source_data_version).    |    0..1 date
- "source_download_date":        # date that data from the resource was downloaded into the ingest system.   |    0..1 date
+ "source_access_date":          # date that data from the resource was accessed and downloaded into the ingest system.   |    0..1 date
  "source_access_urls":          # urls or urls where source data was accessed / downloaded / queried        |    0..m iriOrCURIE
  "source_data_formats":         # format/type of files or payloads that were downloaded/retrieved.          |   0..m   string 
  "source_data_files":           # list of file names from which content was ingested (use when source data is in files)      |   0..m   string 
