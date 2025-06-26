@@ -1,4 +1,4 @@
-# Data-Ingest-Coordination-Working-Group
+# *D*ata *ING*est *O*perations ("DINGO") Working Group
 
 This Working Group is focused on coordinating the ingestion of data into a centralized Translator Knowledge Graph "data layer." 
 The group is responsible for developing and maintaining the Translator Data Ingestion Plan, which includes the development of a Data 
@@ -10,7 +10,7 @@ Committees to ensure that data ingestion activities are aligned with the goals o
 
 
 ### Data Ingest Coordination Working Group Members
-See: [Data Ingest Coordination Working Group Voting Members](WG-Members)
+See: [Data Ingest Coordination Working Group Voting Members](WG-Members.md)
 
 Winter Relay 2025:
 
