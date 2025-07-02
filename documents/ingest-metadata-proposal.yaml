@@ -17,7 +17,7 @@
 #"type":                        # biolink:IngestMetadata (subclassOf InformationContentEntity). Should we use a "category" slot here? - OMIT
  "title":                       # an informative, human-readable name for this metadata file/object, e.g. "CTD Chemical-Disease Source-KGX Ingest Metadata"   |   1..1 string
  "created_by":                  # who created this ingest metadata file    |   1..m string   (for now . . . may evolve to require identifiers (e.g. ORCIDs), or Agent instances/objects)
- "creation_date":               # when it was created                      |   1..1 date
+ "creation_date":               # when this metadata file was created                      |   1..1 date
 
 # Metadata about the ingest task/process/code
 #"ingest_contributors":         # list of developers/curators/modelers who contributed to creating the ingest - OMIT (creators/contributors can be determined from reviewing metadata/commit logs in GitHub code base - can move into ingest meta file if need arises)
@@ -30,10 +30,10 @@
  "source_infores_id":           # infores identifier of the source                   |   1..1 iriOrCurie
  "source_license":              # license / terms of use for the ingested source.    |   0..1 string      TO DO: Provide additional guidance on how to populate. Consider a more cosntrained or richer model of licenses (see proposal 2 below)
  "source_data_version":         # version of the source data ingested (use version naming conventions/syntax from source in the value here)                     |      1..1 string
- "source_publication_date":     # date that the ingested data was actually published by the source (may or may not be reflected in the source_data_version).    |    0..1 date
+ "source_publication_date":     # date that the ingested data was actually published (or last updated) by the source (this may or may not be reflected in the source_data_version).    |      0..1 date
  "source_access_date":          # date that data from the resource was accessed and downloaded into the ingest system.   |    0..1 date
  "source_access_urls":          # urls or urls where source data was accessed / downloaded / queried        |    0..m iriOrCURIE
- "source_data_formats":         # format/type of files or payloads that were downloaded/retrieved.          |   0..m   string 
+ "source_data_formats":         # format/type of files or payloads that were downloaded/retrieved.          |    0..m   string 
  "source_data_files":           # list of file names from which content was ingested (use when source data is in files)      |   0..m   string 
 #"source_data_endpoints":       # list of API endpoint names/descriptions used to query/ingest source data (use when source data is accessed from an API) - OMIT, until we hit this use case
 #"source_database":             # name/description of a database that was accessed/instantiated to retrieve source data (use when source data is pulled from a database) - OMIT, until we hit this ue case
@@ -43,14 +43,14 @@
  "target_type":                 # a flag that reports the levelof processing/modeling applied to the KG  {"Source-KG"  | "Biolink KG"  |  "Normalized KG" } . . .  TO DO: consider if we want something like this?    |   1..1   string / enum
 #"target_id":                   # identifier of the target data/graph, as assigned by the ingesting system or ingest catalog (t.b.d. what this is, how these will look) - OMIT for now
  "target_data_version":         # version of the ingested data as produced by the ingesting system (Translator will use standard semantic versioning conventions here)      |   1..1   string
- "target_creation_date":        # date that the target data/graph was created.    |    1..1 date
+ "target_creation_date":        # date that the target data/graph (as serialized in the accompanying nodes and edges files) was created.    |    1..1 date
  "target_license":              # license / terms of use for the target data/graph. Consider a more cosntrained or richer model of licenses (see proposal 2 below)     |   1..1   string        TO DO: settle on license under which our data is released . . .or OMIT until we do?
  #"target_access_urls":         # url or urls where target data can be accessed / downloaded (should include page for it in our KG Registry/Hub, that gives more info about the dataset not provided in this metadata file) - OMIT until we set up infrastructure for this?
  "target_data_format":          # the format in which the data/graph is serialized. Will be "KGX" for all Translator KGs (KGX is a higher order format, which specifies a json-lines serialization)     |   1..1   string 
  "target_data_model":           # the model used to structure the graph data. Will be Biolink Model for all Translator KGs (except directly parsed "Source KGX" graphs). Reference using the url "https://w3id.org/biolink/biolink-model"?   |   0..1   string 
  "target_data_model_version":   # the version of this data model, e.g. "4.2.6-rc5     |   0..1   string
- "node_normalizer":             # the node normalizer tool applied to the graph (for KGs that  have been normalized)       |   0..1   string
- "node_normalizer_version":     # the version of the node normalizer tool        |   0..1   string
+ "node_normalizer":             # the name of the node normalization tool/algorithm applied to the graph (for KGs that have been normalized). e.g. ""Babel"       |   0..1   string
+ "node_normalizer_version":     # the version of the node normalization tool / algorithm        |   0..1   string
 
 
 # Descriptive metadata about the content of the target (could be used for validation) - perhaps only for the final Normalized KGX artifact, not intermediate KGX artifacts?   OMIT all for now until we sort out waht to colelct,andwhere (may fit better in MetaKG?)
