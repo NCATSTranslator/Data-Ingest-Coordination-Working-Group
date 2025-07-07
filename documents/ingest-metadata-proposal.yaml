@@ -15,9 +15,9 @@
 # Info about this metadata file
 #"id":                          # identifier for this metadata file (may not need this) - OMIT
 #"type":                        # biolink:IngestMetadata (subclassOf InformationContentEntity). Should we use a "category" slot here? - OMIT
- "title":                       # an informative, human-readable name for this metadata file/object, e.g. "CTD Chemical-Disease Source-KGX Ingest Metadata"   |   1..1 string
- "created_by":                  # who created this ingest metadata file    |   1..m string   (for now . . . may evolve to require identifiers (e.g. ORCIDs), or Agent instances/objects)
- "creation_date":               # when this metadata file was created                      |   1..1 date
+ "title":                       # an informative, human-readable name for this metadata file/object, e.g. "CTD Chemical-Disease Norm KGX Ingest Metadata"   |   1..1 string
+ "created_by":                  # the agent (person, tool) that created this ingest metadata file    |   1..m string   (for now . . . may evolve to require identifiers (e.g. ORCIDs), or Agent instances/objects)
+ "creation_date":               # when this metadata file was created     |   1..1 date
 
 # Metadata about the ingest task/process/code
 #"ingest_contributors":         # list of developers/curators/modelers who contributed to creating the ingest - OMIT (creators/contributors can be determined from reviewing metadata/commit logs in GitHub code base - can move into ingest meta file if need arises)
