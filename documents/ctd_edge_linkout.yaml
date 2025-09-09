@@ -1,0 +1,59 @@
+# An example of content for a web page that could be generated  for each ingested source automatically from yaml content in RIGs and Infores catalogs, to replace the current "Source Wiki" system. 
+# Content of this page is selected to be useful for end users navigating to it from an edge in the UI that was provided by the source. 
+# It includes terms of use info, and a list of edge types provided by the source with an explanation for why each was created. 
+# The web page format of this content would resemble that of the RIG pages from which this subset of content is derived. e.g. [here](https://biolink.github.io/resource-ingest-guide-schema/diseases_rig/).
+
+infores_id:  infores:ctd
+name:  CTD Reference Ingest Guide
+url: https://ctdbase.org/
+description: >-
+      CTD is a robust, publicly available database that aims to advance understanding
+      about how environmental exposures affect human health. It provides knowledge,
+      manually curated from the literature, about chemicals and their relationship to
+      other biological entities: chemical to gene/protein interactions plus chemical to
+      disease and gene to disease relationships. These data are integrated with functional
+      and pathway data to aid in the development of hypotheses about the mechanisms underlying
+      environmentally influenced diseases.
+source_terms_of_use:  "No formal license. Bespoke 'terms of use' are described here: https://ctdbase.org/about/legal.jsp"
+
+ingested_edge_types:
+  - subject_categories:
+        - biolink:ChemicalEntity
+    predicate:  biolink:treats_or_applied_or_studied_to_treat 
+    object_categories:
+      - biolink:iseaseOrPhenotypicFeature
+    knowledge_level:
+      - knowledge_assertion
+    agent_type:
+      - manual_agent
+    edge_properties:
+      - publications
+    ui_explanation: CTD Chemical-Disease records with a "T" (therapeutic) DirectEvidence code indicate the chemical to be a "potential" treatment in virtue of its clinical use or study - which maps best to the Biolink predicate 'treats_or_applied_or_studied_to_treat'.
+    additional_notes: The 'treats_or_applied_or_studied_to_treat' predicate is used to avoid making too strong a claim, as CTDs definition of its "T" flag is broad ("a chemical that has a known or potential therapeutic role in a disease"), which covered cases where a chemical may formally treat a disease or only have been studied or applied to treat a disease. All edges are manual agent knowledge assertions, as the ingested data is based on manual literature curation.
+  - subject_categories:
+      - biolink:ChemicalEntity
+    predicate:  biolink:correlated_with
+    object_categories:
+      - biolink:DiseaseOrPhenotypicFeature
+    knowledge_level:
+      - knowledge_assertion
+    agent_type:
+      - manual_agent
+    edge_properties:
+      - publications
+    ui_explanation: CTD Chemical-Disease records with a DirectEvidence code of "M" (marker/mechanism) indicate that the chemical is manually flagged as a marker or contributing factor for a condition. This implies that at minimum there is correlation between the presence of the chemical and condition, for which we use the Biolink 'correlated_with' predicate.
+  - subject_categories:
+      - biolink:ChemicalEntity
+    predicate:  biolink:associated_with
+    object_categories:
+      - biolink:DiseaseOrPhenotypicFeature
+    knowledge_level:
+      - statistical_association
+    agent_type:
+      - data_analysis_pipeline
+    edge_properties:
+      - publications
+      - has_confidence_score
+    ui_explanation: CTD Chemical-Disease records with an inference score have a statistically significant number of shared gene associations that suggest a biological relationship may exist. The statistical basis of this general inferred relationship is best reported using the Biolink 'associated_with' predicate.
+
+translator_terms_of_use: Translator integrates knowledge from numerous public sources. Any re-use of data should adhere to terms of use defined by its source, as described above. 
